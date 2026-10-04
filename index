@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ong Choon Lye | Digital Business Card</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons for professional branding -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- QRCode.js for dynamic QR generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Glassmorphism accent styling */
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .custom-shadow {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col justify-between items-center selection:bg-blue-600 selection:text-white p-0 sm:py-6">
+
+  <main class="w-full sm:max-w-md bg-white sm:rounded-3xl custom-shadow overflow-hidden relative flex flex-col min-h-screen sm:min-h-0 border border-slate-200/60 pb-12">
+    
+    <!-- Hero Banner Background -->
+    <div class="relative h-44 w-full bg-gradient-to-tr from-slate-900 via-blue-950 to-indigo-900 overflow-hidden">
+      <!-- Abstract subtle graphic elements -->
+      <div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-blue-500/10 blur-2xl"></div>
+      <div class="absolute bottom-0 left-0 w-36 h-36 rounded-full bg-indigo-500/15 blur-xl"></div>
+      
+      <!-- Top Quick Header Actions (Share & QR) -->
+      <div class="absolute top-4 right-4 flex space-x-2 z-10">
+        <button id="openShareBtn" aria-label="Share Card" class="w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center backdrop-blur-md transition-all active:scale-95 shadow-sm">
+          <i class="fa-solid fa-arrow-up-from-bracket text-sm"></i>
+        </button>
+        <button id="openQrBtn" aria-label="Show QR Code" class="w-10 h-10 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center backdrop-blur-md transition-all active:scale-95 shadow-sm">
+          <i class="fa-solid fa-qrcode text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="px-6 -mt-16 relative flex flex-col items-center text-center">
+      <!-- Profile Avatar Container -->
+      <div class="relative w-32 h-32 rounded-full border-4 border-white shadow-xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center overflow-hidden group">
+        <!-- Monogram / Placeholder Icon (User can replace with <img src="photo.jpg">) -->
+        <span class="text-3xl font-bold tracking-wider text-slate-100 flex items-center justify-center">
+          OCL
+        </span>
+        <!-- Optional status dot -->
+        <span class="absolute bottom-2 right-2 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full" title="Available for advisory"></span>
+      </div>
+
+      <!-- Identity Text -->
+      <h1 class="mt-4 text-2xl font-bold tracking-tight text-slate-900">Ong Choon Lye</h1>
+      <p class="text-xs font-semibold uppercase tracking-wider text-blue-600 mt-1">Supply Chain Operations & Business Process</p>
+      <p class="text-sm text-slate-600 mt-0.5">Independent Advisor</p>
+      
+      <div class="inline-flex items-center gap-1.5 text-xs text-slate-500 mt-2 font-medium bg-slate-50 px-3 py-1 rounded-full border border-slate-200">
+        <i class="fa-solid fa-location-dot text-rose-500 text-xs"></i>
+        <span>Singapore</span>
+      </div>
+    </div>
+
+    <div class="px-6 mt-6">
+      <button id="downloadVcardBtn" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-3.5 px-5 rounded-2xl font-semibold shadow-md shadow-blue-500/25 flex items-center justify-center gap-2 transition-all transform active:scale-[0.98]">
+        <i class="fa-solid fa-user-plus text-base"></i>
+        <span>Save Contact (.vcf)</span>
+      </button>
+      <p class="text-[11px] text-center text-slate-400 mt-1.5 font-normal">Saves straight to your iPhone or Android phonebook</p>
+    </div>
+
+    <div class="px-6 mt-6 grid grid-cols-4 gap-3">
+      <!-- Call -->
+      <a href="tel:+6591234567" id="contactPhoneLink" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 active:scale-95 transition-all text-slate-700 hover:text-blue-600 group">
+        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-blue-600 group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-phone text-sm"></i>
+        </div>
+        <span class="text-[11px] font-medium mt-1.5">Call</span>
+      </a>
+
+      <!-- WhatsApp -->
+      <a href="https://wa.me/6591234567" target="_blank" rel="noopener noreferrer" id="contactWhatsAppLink" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200/80 active:scale-95 transition-all text-slate-700 hover:text-emerald-600 group">
+        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-emerald-600 group-hover:scale-110 transition-transform">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+        </div>
+        <span class="text-[11px] font-medium mt-1.5">WhatsApp</span>
+      </a>
+
+      <!-- Email -->
+      <a href="mailto:choonlye.ong@example.com" id="contactEmailLink" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-indigo-50/70 border border-slate-200/80 active:scale-95 transition-all text-slate-700 hover:text-indigo-600 group">
+        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-indigo-600 group-hover:scale-110 transition-transform">
+          <i class="fa-solid fa-envelope text-sm"></i>
+        </div>
+        <span class="text-[11px] font-medium mt-1.5">Email</span>
+      </a>
+
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/in/choon-lye-ong-94b15024/" target="_blank" rel="noopener noreferrer" id="contactLinkedInLink" class="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 hover:bg-sky-50/70 border border-slate-200/80 active:scale-95 transition-all text-slate-700 hover:text-sky-600 group">
+        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-sky-600 group-hover:scale-110 transition-transform">
+          <i class="fa-brands fa-linkedin-in text-base"></i>
+        </div>
+        <span class="text-[11px] font-medium mt-1.5">LinkedIn</span>
+      </a>
+    </div>
+
+    <div class="px-6 mt-6">
+      <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-left">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Expertise & Background</h3>
+        <p class="text-xs leading-relaxed text-slate-600">
+          Senior advisor specializing in global freight, contract logistics, warehouse process optimization, digital transformation, and ERP/WMS cross-border integrations.
+        </p>
+        <div class="mt-3 flex flex-wrap gap-1.5">
+          <span class="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">Freight & 3PL</span>
+          <span class="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">Supply Chain Ops</span>
+          <span class="text-[10px] bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-medium">Process Engineering</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-6 mt-8">
+      <div class="border border-slate-200 rounded-2xl p-5 bg-gradient-to-b from-white to-slate-50 shadow-sm relative">
+        <div class="flex items-center gap-2.5 mb-1">
+          <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-handshake"></i>
+          </div>
+          <h2 class="text-sm font-bold text-slate-800">Exchange Contact Details</h2>
+        </div>
+        <p class="text-xs text-slate-500 mb-4">Meeting at an event? Leave your details so we can keep in touch.</p>
+
+        <form id="leadCaptureForm" class="space-y-3">
+          <div>
+            <label for="leadName" class="block text-[11px] font-medium text-slate-600 mb-1">Your Full Name *</label>
+            <input type="text" id="leadName" required placeholder="e.g. Alexander Tan" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="leadEmail" class="block text-[11px] font-medium text-slate-600 mb-1">Email Address *</label>
+              <input type="email" id="leadEmail" required placeholder="name@company.com" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            </div>
+            <div>
+              <label for="leadPhone" class="block text-[11px] font-medium text-slate-600 mb-1">Mobile / WhatsApp</label>
+              <input type="tel" id="leadPhone" placeholder="+65 8xxx xxxx" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            </div>
+          </div>
+
+          <div>
+            <label for="leadCompany" class="block text-[11px] font-medium text-slate-600 mb-1">Company / Organization</label>
+            <input type="text" id="leadCompany" placeholder="e.g. Global Logistics Ltd" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+          </div>
+
+          <div>
+            <label for="leadNote" class="block text-[11px] font-medium text-slate-600 mb-1">Quick Note (Optional)</label>
+            <textarea id="leadNote" rows="2" placeholder="e.g. Great discussing automated warehousing today." class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white resize-none"></textarea>
+          </div>
+
+          <button type="submit" class="w-full bg-slate-900 hover:bg-black active:scale-[0.99] text-white py-2.5 px-4 rounded-xl text-xs font-semibold shadow-sm transition-all flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-paper-plane text-[11px]"></i>
+            <span>Send Contact Info</span>
+          </button>
+        </form>
+
+        <!-- Lead Submission Success Box -->
+        <div id="leadSuccessBox" class="hidden mt-4 pt-4 border-t border-slate-200 animate-fadeIn">
+          <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3 rounded-xl text-xs">
+            <div class="flex items-center gap-2 font-semibold">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i>
+              <span>Details saved successfully!</span>
+            </div>
+            <p class="text-[11px] mt-1 text-emerald-700">Choose how to transmit your info directly to Choon Lye:</p>
+            <div class="flex flex-col sm:flex-row gap-2 mt-3">
+              <a id="mailtoActionBtn" href="#" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-center py-2 px-3 rounded-lg font-medium text-[11px] flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-envelope"></i> Send via Email Client
+              </a>
+              <button id="copyDetailsBtn" type="button" class="flex-1 bg-white border border-emerald-300 text-emerald-800 text-center py-2 px-3 rounded-lg font-medium text-[11px] flex items-center justify-center gap-1.5 hover:bg-emerald-100">
+                <i class="fa-solid fa-copy"></i> Copy Summary
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 text-center text-[11px] text-slate-400">
+      <span>Self-hosted on GitHub Pages &bull; NFC Enabled</span>
+    </div>
+  </main>
+
+  <div id="qrModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden transition-opacity duration-200">
+    <div class="bg-white rounded-3xl p-6 max-w-xs w-full text-center shadow-2xl relative animate-scaleUp">
+      <button id="closeQrBtn" aria-label="Close QR Modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center text-xs">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3 class="font-bold text-base text-slate-900">Scan Digital Card</h3>
+      <p class="text-xs text-slate-500 mt-1 mb-4">Hold up camera to view and save contact details</p>
+      
+      <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-inner inline-block mx-auto" id="qrcodeCanvasContainer"></div>
+      
+      <p id="qrUrlLabel" class="text-[10px] text-slate-400 truncate mt-3 font-mono"></p>
+
+      <button id="doneQrBtn" class="mt-4 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-xs font-semibold transition-all">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-6 z-50 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 transform translate-y-2 flex items-center gap-2">
+    <i class="fa-solid fa-check text-emerald-400"></i>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <script>
+    // --- Configurable Personal Details ---
+    // Modify these strings to personalize your card details without touching UI code
+    const PROFILE_CONFIG = {
+      fullName: "Ong Choon Lye",
+      title: "Supply Chain Operations & Business Process Advisor",
+      company: "Supply Chain Advisory Services",
+      email: "choonlye.ong@example.com", // <-- Update with your real email
+      phone: "+6591234567",             // <-- Update with your phone
+      phoneDisplay: "+65 9123 4567",
+      whatsappNumber: "6591234567",      // <-- Clean digits with country code
+      linkedinUrl: "https://www.linkedin.com/in/choon-lye-ong-94b15024/",
+      website: "https://github.com",
+      location: "Singapore",
+      note: "Supply Chain, 3PL Freight, and WMS Operations Specialist"
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById('contactPhoneLink').href = `tel:${PROFILE_CONFIG.phone}`;
+      document.getElementById('contactWhatsAppLink').href = `https://wa.me/${PROFILE_CONFIG.whatsappNumber}`;
+      document.getElementById('contactEmailLink').href = `mailto:${PROFILE_CONFIG.email}`;
+      document.getElementById('contactLinkedInLink').href = PROFILE_CONFIG.linkedinUrl;
+
+      // Initialize QR Code Modal generator
+      initQrCode();
+    });
+
+    function generateVCardData() {
+      // Standard vCard 3.0 compatible with both iOS Apple Contacts and Android Contacts
+      return [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        `N:Ong;Choon Lye;;;`,
+        `FN:${PROFILE_CONFIG.fullName}`,
+        `ORG:${PROFILE_CONFIG.company}`,
+        `TITLE:${PROFILE_CONFIG.title}`,
+        `TEL;TYPE=CELL,VOICE:${PROFILE_CONFIG.phone}`,
+        `EMAIL;TYPE=WORK,INTERNET:${PROFILE_CONFIG.email}`,
+        `URL;TYPE=LinkedIn:${PROFILE_CONFIG.linkedinUrl}`,
+        `ADR;TYPE=WORK:;;;Singapore;;;Singapore`,
+        `NOTE:${PROFILE_CONFIG.note}`,
+        "END:VCARD"
+      ].join("\r\n");
+    }
+
+    document.getElementById("downloadVcardBtn").addEventListener("click", () => {
+      try {
+        const vcardContent = generateVCardData();
+        const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+
+        link.setAttribute("href", url);
+        link.setAttribute("download", `${PROFILE_CONFIG.fullName.replace(/\s+/g, "_")}.vcf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        showToast("Contact card downloaded!");
+      } catch (err) {
+        showToast("Unable to generate contact file.");
+      }
+    });
+
+    document.getElementById("openShareBtn").addEventListener("click", async () => {
+      const shareData = {
+        title: `${PROFILE_CONFIG.fullName} | Digital Business Card`,
+        text: `Connect with ${PROFILE_CONFIG.fullName} - ${PROFILE_CONFIG.title}`,
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          // Fallback if dismissed or restricted
+          copyTextToClipboard(window.location.href);
+          showToast("Card URL copied to clipboard!");
+        }
+      } else {
+        copyTextToClipboard(window.location.href);
+        showToast("Card link copied to clipboard!");
+      }
+    });
+
+    const qrModal = document.getElementById("qrModal");
+    const openQrBtn = document.getElementById("openQrBtn");
+    const closeQrBtn = document.getElementById("closeQrBtn");
+    const doneQrBtn = document.getElementById("doneQrBtn");
+    let qrGenerated = false;
+
+    function initQrCode() {
+      const currentUrl = window.location.href;
+      document.getElementById("qrUrlLabel").textContent = currentUrl;
+
+      if (!qrGenerated && typeof QRCode !== "undefined") {
+        new QRCode(document.getElementById("qrcodeCanvasContainer"), {
+          text: currentUrl,
+          width: 180,
+          height: 180,
+          colorDark: "#0f172a",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        qrGenerated = true;
+      }
+    }
+
+    openQrBtn.addEventListener("click", () => {
+      initQrCode();
+      qrModal.classList.remove("hidden");
+    });
+
+    const hideQrModal = () => qrModal.classList.add("hidden");
+    closeQrBtn.addEventListener("click", hideQrModal);
+    doneQrBtn.addEventListener("click", hideQrModal);
+    qrModal.addEventListener("click", (e) => {
+      if (e.target === qrModal) hideQrModal();
+    });
+
+    const leadForm = document.getElementById("leadCaptureForm");
+    const leadSuccessBox = document.getElementById("leadSuccessBox");
+    const mailtoActionBtn = document.getElementById("mailtoActionBtn");
+    const copyDetailsBtn = document.getElementById("copyDetailsBtn");
+    let currentLeadData = null;
+
+    leadForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("leadName").value.trim();
+      const email = document.getElementById("leadEmail").value.trim();
+      const phone = document.getElementById("leadPhone").value.trim();
+      const company = document.getElementById("leadCompany").value.trim();
+      const note = document.getElementById("leadNote").value.trim();
+
+      currentLeadData = {
+        name,
+        email,
+        phone: phone || "Not provided",
+        company: company || "Not provided",
+        note: note || "None",
+        timestamp: new Date().toLocaleString()
+      };
+
+      // Store in localStorage for safe offline logging
+      try {
+        const stored = JSON.parse(localStorage.getItem("card_leads") || "[]");
+        stored.push(currentLeadData);
+        localStorage.setItem("card_leads", JSON.stringify(stored));
+      } catch (err) {
+        // Continue gracefully even if storage is quota-blocked
+      }
+
+      // Pre-fill the mailto URL
+      const emailSubject = encodeURIComponent(`Contact Exchange: ${name} connected with Ong Choon Lye`);
+      const emailBody = encodeURIComponent(
+        `Hi Choon Lye,\n\nNice meeting you! Here are my contact details:\n\n` +
+        `Name: ${name}\n` +
+        `Company: ${company || "-"}\n` +
+        `Email: ${email}\n` +
+        `Phone: ${phone || "-"}\n` +
+        `Note: ${note || "-"}\n\n` +
+        `Sent via your Digital Business Card.`
+      );
+      
+      mailtoActionBtn.href = `mailto:${PROFILE_CONFIG.email}?subject=${emailSubject}&body=${emailBody}`;
+
+      // Reveal success prompt
+      leadSuccessBox.classList.remove("hidden");
+      showToast("Details recorded!");
+    });
+
+    function copyTextToClipboard(text) {
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = text;
+      tempTextArea.style.position = "fixed";
+      tempTextArea.style.opacity = "0";
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      try {
+        document.execCommand("copy");
+      } catch (err) {
+        // Fallback ignore
+      }
+      document.body.removeChild(tempTextArea);
+    }
+
+    copyDetailsBtn.addEventListener("click", () => {
+      if (!currentLeadData) return;
+      const summary = `Contact: ${currentLeadData.name} | ${currentLeadData.company} | ${currentLeadData.email} | ${currentLeadData.phone}`;
+      copyTextToClipboard(summary);
+      showToast("Contact summary copied!");
+    });
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const toastMsg = document.getElementById("toastMsg");
+      toastMsg.textContent = message;
+      toast.classList.remove("opacity-0", "translate-y-2");
+      toast.classList.add("opacity-100", "translate-y-0");
+
+      setTimeout(() => {
+        toast.classList.remove("opacity-100", "translate-y-0");
+        toast.classList.add("opacity-0", "translate-y-2");
+      }, 2400);
+    }
+  </script>
+</body>
+</html>
