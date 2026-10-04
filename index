@@ -234,14 +234,14 @@
       fullName: "Ong Choon Lye",
       title: "Supply Chain Operations & Business Process Advisor",
       company: "Supply Chain Advisory Services",
-      email: "choonlye.ong@example.com", // <-- Update with your real email
-      phone: "+6591234567",             // <-- Update with your phone
-      phoneDisplay: "+65 9123 4567",
-      whatsappNumber: "6591234567",      // <-- Clean digits with country code
-      linkedinUrl: "https://www.linkedin.com/in/choon-lye-ong-94b15024/",
+      email: "ong_choon_lye@yahoo.com", // <-- Update with your real email
+      phone: "+65 87671146",             // <-- Update with your phone
+      phoneDisplay: "+65 8767 1146",
+      whatsappNumber: "6587671146",      // <-- Clean digits with country code
+      linkedinUrl: "https://www.linkedin.com/in/choonlye/",
       website: "https://github.com",
       location: "Singapore",
-      note: "Supply Chain, 3PL Freight, and WMS Operations Specialist"
+      note: "Business Process & Systems, Supply Chain, B2B Integration, and Freight & Warehouse Systems"
     };
 
     document.addEventListener("DOMContentLoaded", () => {
