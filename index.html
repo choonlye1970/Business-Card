@@ -310,13 +310,17 @@
         `TEL;TYPE=CELL,VOICE:${PROFILE_CONFIG.phone}`,
         `EMAIL;TYPE=WORK,INTERNET:${PROFILE_CONFIG.email}`,
         `URL:${PROFILE_CONFIG.linkedinUrl}`,
+        `URL:${PROFILE_CONFIG.website}`,
         `ADR;TYPE=WORK:;;;;;;${esc(PROFILE_CONFIG.location)}`,
         `NOTE:${esc(PROFILE_CONFIG.note)}`
       ];
       if (photoBase64) lines.push(`PHOTO;ENCODING=b;TYPE=JPEG:${photoBase64}`);
       lines.push("END:VCARD");
-      // Only the long PHOTO line is folded; Android misreads folded text lines (e.g. NOTE)
-      return lines.map(l => l.startsWith("PHOTO") ? foldLine(l) : l).join("\r\n") + "\r\n";
+      // Android needs the long PHOTO line folded; iOS reads it best as one unbroken line.
+      // Other lines are never folded (Android misreads folded text lines such as NOTE).
+      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+                    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      return lines.map(l => (l.startsWith("PHOTO") && !isIOS) ? foldLine(l) : l).join("\r\n") + "\r\n";
     }
 
     document.getElementById("downloadVcardBtn").addEventListener("click", () => {
