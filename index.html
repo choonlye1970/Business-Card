@@ -242,7 +242,7 @@
       website: "https://choonlye1970.github.io/Business-Card/",
       location: "Singapore",
       note: "Business Process & Systems, Supply Chain, B2B Integration, and Freight & Warehouse Systems",
-      photoFile: "Logo.jpg"   // image file in the same GitHub folder as index.html (JPG or PNG)
+      vcfFile: "Ong_Choon_Lye.vcf"   // contact file in the same GitHub folder as index.html
     };
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -253,93 +253,12 @@
 
       // Initialize QR Code Modal generator
       initQrCode();
-
-      // Build the contact photo in advance so the Save button works instantly
-      preparePhoto();
     });
 
-    // --- Contact photo: built at page load from the hosted image file ---
-    let photoBase64 = "";
-
-    function preparePhoto() {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-          try {
-            const size = 256;                       // small square = accepted by iOS & Android
-            const canvas = document.createElement("canvas");
-            canvas.width = size; canvas.height = size;
-            const ctx = canvas.getContext("2d");
-            ctx.fillStyle = "#ffffff";              // white behind transparent PNG logos
-            ctx.fillRect(0, 0, size, size);
-            const side = Math.min(img.naturalWidth, img.naturalHeight);   // centre square crop
-            const sx = (img.naturalWidth - side) / 2;
-            const sy = (img.naturalHeight - side) / 2;
-            ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-            photoBase64 = canvas.toDataURL("image/jpeg", 0.85).split(",")[1];
-          } catch (e) { photoBase64 = ""; }
-          resolve();
-        };
-        img.onerror = () => { photoBase64 = ""; resolve(); };
-        img.src = PROFILE_CONFIG.photoFile;
-      });
-    }
-
-    // Fold long lines to 75 chars (vCard rule; continuation lines start with a space)
-    function foldLine(line) {
-      if (line.length <= 75) return line;
-      const parts = [line.slice(0, 75)];
-      for (let i = 75; i < line.length; i += 74) parts.push(" " + line.slice(i, i + 74));
-      return parts.join("\r\n");
-    }
-
-    // Escape characters that have special meaning in vCard text values
-    function esc(v) {
-      return String(v).replace(/\\/g, "\\\\").replace(/,/g, "\\,").replace(/;/g, "\\;").replace(/\n/g, "\\n");
-    }
-
-    function generateVCardData() {
-      // vCard 3.0 compatible with both iOS Apple Contacts and Android Contacts
-      const lines = [
-        "BEGIN:VCARD",
-        "VERSION:3.0",
-        "N:Ong;Choon Lye;;;",
-        `FN:${esc(PROFILE_CONFIG.fullName)}`,
-        `ORG:${esc(PROFILE_CONFIG.company)}`,
-        `TITLE:${esc(PROFILE_CONFIG.title)}`,
-        `TEL;TYPE=CELL,VOICE:${PROFILE_CONFIG.phone}`,
-        `EMAIL;TYPE=WORK,INTERNET:${PROFILE_CONFIG.email}`,
-        `URL:${PROFILE_CONFIG.linkedinUrl}`,
-        `ADR;TYPE=WORK:;;;;;;${esc(PROFILE_CONFIG.location)}`,
-        `NOTE:${esc(PROFILE_CONFIG.note)}`
-      ];
-      if (photoBase64) lines.push(`PHOTO;ENCODING=b;TYPE=JPEG:${photoBase64}`);
-      lines.push("END:VCARD");
-      // Android needs the long PHOTO line folded; iOS reads it best as one unbroken line.
-      // Other lines are never folded (Android misreads folded text lines such as NOTE).
-      const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
-                    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      return lines.map(l => (l.startsWith("PHOTO") && !isIOS) ? foldLine(l) : l).join("\r\n") + "\r\n";
-    }
-
+    // --- Save Contact: opens the ready-made contact file hosted next to index.html ---
+    // To change what gets saved to phones, edit Ong_Choon_Lye.vcf in the repo.
     document.getElementById("downloadVcardBtn").addEventListener("click", () => {
-      try {
-        const vcardContent = generateVCardData();
-        const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-
-        link.setAttribute("href", url);
-        link.setAttribute("download", `${PROFILE_CONFIG.fullName.replace(/\s+/g, "_")}.vcf`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(url), 4000);   // iOS needs the URL alive a moment longer
-
-        showToast("Contact card downloaded!");
-      } catch (err) {
-        showToast("Unable to generate contact file.");
-      }
+      window.location.href = PROFILE_CONFIG.vcfFile;
     });
 
     document.getElementById("openShareBtn").addEventListener("click", async () => {
