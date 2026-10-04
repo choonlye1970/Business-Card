@@ -316,7 +316,8 @@
       ];
       if (photoBase64) lines.push(`PHOTO;ENCODING=b;TYPE=JPEG:${photoBase64}`);
       lines.push("END:VCARD");
-      return lines.map(foldLine).join("\r\n") + "\r\n";
+      // Only the long PHOTO line is folded; Android misreads folded text lines (e.g. NOTE)
+      return lines.map(l => l.startsWith("PHOTO") ? foldLine(l) : l).join("\r\n") + "\r\n";
     }
 
     document.getElementById("downloadVcardBtn").addEventListener("click", () => {
